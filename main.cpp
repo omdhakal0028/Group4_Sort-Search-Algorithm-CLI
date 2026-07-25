@@ -24,24 +24,26 @@ void displayAllRecords() {
     }
   }
 }
-void selectionSort(int arr[], int n) {
+int selectionSort(int arr[], int n) {
   int min_idx;
   int temp;
+  int operationCount;
   for (int i = 0; i < n - 1; i++) {
     min_idx = i;
-
     for (int j = i + 1; j < n; j++) {
+      operationCount++;
       if (arr[j] < arr[min_idx]) {
         min_idx = j;
       }
     }
-
     if (min_idx != i) {
       temp = arr[i];
       arr[i] = arr[min_idx];
       arr[min_idx] = temp;
+      operationCount++;
     }
   }
+  return operationCount;
 }
 void sortMenu() {
   cout << "--------------------------------------------------------------" << endl;
@@ -60,10 +62,11 @@ void sortMenu() {
     cout << "___________________________________________" << endl;
     cout << "Running Selection sort. Hold on tight :>" << endl;
     auto start = high_resolution_clock::now();
-    selectionSort(arr, n);
+    int totalOperations = selectionSort(arr, n);
     auto stop = high_resolution_clock::now();
     duration<double, milli> duration = stop - start;
-    cout << "Selection Sort - Time Taken: " << duration.count() << " ms"
+    cout << "Operation Count : " << totalOperations << endl;
+    cout << "Time Taken      : " << duration.count() << " ms"
          << endl;
 
   } else if (sortChoice == 2) {
@@ -130,8 +133,6 @@ void mainMenu() {
 }
 int main() {
   randomArrays(100);
-
   mainMenu();
-
   return 0;
 }
