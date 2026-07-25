@@ -1,7 +1,8 @@
+#include <chrono>
 #include <cstdlib>
-#include <ctime>
 #include <iostream>
 using namespace std;
+using namespace std::chrono;
 
 int n = 100;
 int arr[100];
@@ -13,6 +14,7 @@ void randomArrays(int n) {
 }
 void displayAllRecords() {
   // Display all Arrays
+  cout << "----------------------------------------------" << endl;
   cout << "Displaying all Records >..<" << endl;
   cout << endl;
   for (int i = 0; i < n; i++) {
@@ -42,7 +44,7 @@ void selectionSort(int arr[], int n) {
   }
 }
 void sortMenu() {
-  cout << endl;
+  cout << "--------------------------------------------------------------" << endl;
   cout << "Welcome >< Which Sorting algorithm would you like to choose :) "
        << endl;
   cout << "--------------------------------------------------------------"
@@ -55,8 +57,15 @@ void sortMenu() {
   cin >> sortChoice;
 
   if (sortChoice == 1) {
+    cout << "___________________________________________" << endl;
+    cout << "Running Selection sort. Hold on tight :>" << endl;
+    auto start = high_resolution_clock::now();
     selectionSort(arr, n);
-    
+    auto stop = high_resolution_clock::now();
+    duration<double, milli> duration = stop - start;
+    cout << "Selection Sort - Time Taken: " << duration.count() << " ms"
+         << endl;
+
   } else if (sortChoice == 2) {
     // quick sort
   } else if (sortChoice == 3) {
@@ -67,11 +76,10 @@ void sortMenu() {
 }
 
 void searchMenu() {
-  cout << endl;
+  cout << "--------------------------------------------------------------"<< endl;
   cout << "Welcome >< Which Searching Algorithm would you like to choose :) "
        << endl;
-  cout << "--------------------------------------------------------------"
-       << endl;
+  cout << "---------------------------------------------------------------" << endl;
   cout << "1. Binary Search Algorithm" << endl;
   cout << "2. Interpolation Search Algorithm" << endl;
   cout << "What you like to do :) ";
@@ -88,9 +96,12 @@ void searchMenu() {
   }
 }
 void mainMenu() {
+  cout << endl;
   cout << "Welcome >< Generated 100 dummy Arrays :) " << endl;
   while (true) {
-    cout << "----------------------------------------" << endl;
+    cout << "-----------------------------------------" << endl;
+    cout << "Group4-Sort-Search-Algorithm-CLI" << endl;
+    cout << "-----------------------------------------" << endl;
     cout << "1. Display ALL Records" << endl;
     cout << "2. Sort Records" << endl;
     cout << "3. Search For Number" << endl;
