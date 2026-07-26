@@ -27,7 +27,7 @@ void displayAllRecords() {
 int selectionSort(int arr[], int n) {
   int min_idx;
   int temp;
-  int operationCount;
+  int operationCount = 0;
   for (int i = 0; i < n - 1; i++) {
     min_idx = i;
     for (int j = i + 1; j < n; j++) {
@@ -45,8 +45,79 @@ int selectionSort(int arr[], int n) {
   }
   return operationCount;
 }
+
+int merge(int arr[], int left, int mid, int right) {
+  int operationCount = 0;
+  int n1 = mid - left + 1;
+  int n2 = right - mid;
+
+  int *L = new int[n1];
+  int *R = new int[n2];
+
+  for (int i = 0; i < n1; i++) {
+    L[i] = arr[left + i];
+    operationCount++;
+  }
+  for (int j = 0; j < n2; j++) {
+    R[j] = arr[mid + 1 + j];
+    operationCount++;
+  }
+
+  int i = 0;
+  int j = 0;
+  int k = left;
+
+  while (i < n1 && j < n2) {
+    operationCount++;
+    if (L[i] <= R[j]) {
+      arr[k] = L[i];
+      i++;
+    } else {
+      arr[k] = R[j];
+      j++;
+    }
+    operationCount++;
+    k++;
+  }
+
+  while (i < n1) {
+    arr[k] = L[i];
+    i++;
+    k++;
+    operationCount++;
+  }
+
+  while (j < n2) {
+    arr[k] = R[j];
+    j++;
+    k++;
+    operationCount++;
+  }
+
+  delete [] L;
+  delete [] R;
+  return operationCount;
+}
+
+int mergeSortMain(int arr[], int left, int right) {
+  int operationCount = 0;
+  if (left < right) {
+    int mid = left + (right - left) / 2;
+
+    operationCount += mergeSortMain(arr, left, mid);
+    operationCount += mergeSortMain(arr, mid + 1, right);
+    operationCount += merge(arr, left, mid, right);
+  }
+  return operationCount;
+}
+
+int mergeSort(int arr[], int n){
+  return mergeSortMain(arr, 0, n-1);
+}
+
 void sortMenu() {
-  cout << "--------------------------------------------------------------" << endl;
+  cout << "--------------------------------------------------------------"
+       << endl;
   cout << "Welcome >< Which Sorting algorithm would you like to choose :) "
        << endl;
   cout << "--------------------------------------------------------------"
@@ -60,29 +131,37 @@ void sortMenu() {
 
   if (sortChoice == 1) {
     cout << "___________________________________________" << endl;
-    cout << "Running Selection sort. Hold on tight :>" << endl;
+    cout << "Running Selection Sort. Hold on tight :>" << endl;
     auto start = high_resolution_clock::now();
     int totalOperations = selectionSort(arr, n);
     auto stop = high_resolution_clock::now();
     duration<double, milli> duration = stop - start;
     cout << "Operation Count : " << totalOperations << endl;
-    cout << "Time Taken      : " << duration.count() << " ms"
-         << endl;
+    cout << "Time Taken      : " << duration.count() << " ms" << endl;
 
   } else if (sortChoice == 2) {
     // quick sort
   } else if (sortChoice == 3) {
-    // merge sort
+    cout << "___________________________________________" << endl;
+    cout << "Running Merge Sort. Hold on tight :>" << endl;
+    auto start = high_resolution_clock::now();
+    int totalOperations = mergeSort(arr, n);
+    auto stop = high_resolution_clock::now();
+    duration<double, milli> duration = stop - start;
+    cout << "Operation Count : " << totalOperations << endl;
+    cout << "Time Taken      : " << duration.count() << " ms" << endl;
   } else {
     cout << "Enter Valid choice :( " << endl;
   }
 }
 
 void searchMenu() {
-  cout << "--------------------------------------------------------------"<< endl;
+  cout << "--------------------------------------------------------------"
+       << endl;
   cout << "Welcome >< Which Searching Algorithm would you like to choose :) "
        << endl;
-  cout << "---------------------------------------------------------------" << endl;
+  cout << "---------------------------------------------------------------"
+       << endl;
   cout << "1. Binary Search Algorithm" << endl;
   cout << "2. Interpolation Search Algorithm" << endl;
   cout << "What you like to do :) ";
