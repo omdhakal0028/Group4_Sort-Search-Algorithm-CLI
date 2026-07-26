@@ -46,6 +46,42 @@ int selectionSort(int arr[], int n) {
   return operationCount;
 }
 
+int partition(int arr[], int low, int high, int &operationCount) {
+  int pivot = arr[high];
+  int i = (low - 1);
+
+  for (int j = low; j <= high - 1; j++) {
+    operationCount++;
+    if (arr[j] < pivot) {
+      i++;
+      int temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+      operationCount++;
+    }
+  }
+
+  int temp = arr[i + 1];
+  arr[i + 1] = arr[high];
+  arr[high] = temp;
+  operationCount++;
+  return (i + 1);
+}
+
+void quickSortMain(int arr[], int low, int high, int &operationCount) {
+  if (low < high) {
+    int pi = partition(arr, low, high, operationCount);
+    quickSortMain(arr, low, pi - 1, operationCount);
+    quickSortMain(arr, pi + 1, high, operationCount);
+  }
+}
+
+int quickSort(int arr[], int n) {
+  int operationCount = 0;
+  quickSortMain(arr, 0, n - 1, operationCount);
+  return operationCount;
+}
+
 int merge(int arr[], int left, int mid, int right) {
   int operationCount = 0;
   int n1 = mid - left + 1;
@@ -56,11 +92,9 @@ int merge(int arr[], int left, int mid, int right) {
 
   for (int i = 0; i < n1; i++) {
     L[i] = arr[left + i];
-    operationCount++;
   }
   for (int j = 0; j < n2; j++) {
     R[j] = arr[mid + 1 + j];
-    operationCount++;
   }
 
   int i = 0;
@@ -76,7 +110,6 @@ int merge(int arr[], int left, int mid, int right) {
       arr[k] = R[j];
       j++;
     }
-    operationCount++;
     k++;
   }
 
@@ -84,18 +117,16 @@ int merge(int arr[], int left, int mid, int right) {
     arr[k] = L[i];
     i++;
     k++;
-    operationCount++;
   }
 
   while (j < n2) {
     arr[k] = R[j];
     j++;
     k++;
-    operationCount++;
   }
 
-  delete [] L;
-  delete [] R;
+  delete[] L;
+  delete[] R;
   return operationCount;
 }
 
@@ -111,9 +142,7 @@ int mergeSortMain(int arr[], int left, int right) {
   return operationCount;
 }
 
-int mergeSort(int arr[], int n){
-  return mergeSortMain(arr, 0, n-1);
-}
+int mergeSort(int arr[], int n) { return mergeSortMain(arr, 0, n - 1); }
 
 void sortMenu() {
   cout << "--------------------------------------------------------------"
@@ -140,7 +169,14 @@ void sortMenu() {
     cout << "Time Taken      : " << duration.count() << " ms" << endl;
 
   } else if (sortChoice == 2) {
-    // quick sort
+    cout << "___________________________________________" << endl;
+    cout << "Running Quick Sort. Hold on tight :>" << endl;
+    auto start = high_resolution_clock::now();
+    int totalOperations = quickSort(arr, n);
+    auto stop = high_resolution_clock::now();
+    duration<double, milli> duration = stop - start;
+    cout << "Operation Count : " << totalOperations << endl;
+    cout << "Time Taken      : " << duration.count() << " ms" << endl;
   } else if (sortChoice == 3) {
     cout << "___________________________________________" << endl;
     cout << "Running Merge Sort. Hold on tight :>" << endl;
@@ -211,6 +247,7 @@ void mainMenu() {
   }
 }
 int main() {
+  srand(time(0));
   randomArrays(100);
   mainMenu();
   return 0;
