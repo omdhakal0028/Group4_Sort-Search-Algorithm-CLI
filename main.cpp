@@ -4,8 +4,10 @@
 using namespace std;
 using namespace std::chrono;
 
+const int MAX_SIZE = 50000;
+int arr[MAX_SIZE];
 int n = 100;
-int arr[100];
+
 void randomArrays(int n) {
   // Generate random Arrays
   for (int i = 0; i < n; i++) {
