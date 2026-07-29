@@ -42,7 +42,6 @@ int selectionSort(int arr[], int n) {
       temp = arr[i];
       arr[i] = arr[min_idx];
       arr[min_idx] = temp;
-      operationCount++;
     }
   }
   return operationCount;
@@ -66,7 +65,6 @@ int partition(int arr[], int low, int high, int &operationCount) {
   int temp = arr[i + 1];
   arr[i + 1] = arr[high];
   arr[high] = temp;
-  operationCount++;
   return (i + 1);
 }
 
@@ -194,27 +192,57 @@ void sortMenu() {
 }
 
 int binarySearch(int arr[], int n, int target, int &operationCount) {
-    int left = 0;
-    int right = n - 1;
-    operationCount = 0;
+  int left = 0;
+  int right = n - 1;
+  operationCount = 0;
 
-    while (left <= right) {
-        operationCount++;
+  while (left <= right) {
+    operationCount++;
 
-        int mid = left + (right - left) / 2;
+    int mid = left + (right - left) / 2;
 
-        if (arr[mid] == target) {
-            return mid;
-        }
-
-        if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
+    if (arr[mid] == target) {
+      return mid;
     }
 
-    return -1;
+    if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return -1;
+}
+int interpolationSearch(int arr[], int n, int target, int &operationCount) {
+  int low = 0;
+  int high = n - 1;
+  operationCount = 0;
+
+  while (low <= high && target >= arr[low] && target <= arr[high]) {
+    operationCount++;
+
+    if (arr[low] == arr[high]) {
+      if (arr[low] == target)
+        return low;
+      break;
+    }
+
+    int pos = low + (((double)(high - low) / (arr[high] - arr[low])) *
+                     (target - arr[low]));
+
+    if (arr[pos] == target) {
+      return pos;
+    }
+
+    if (arr[pos] < target) {
+      low = pos + 1;
+    } else {
+      high = pos - 1;
+    }
+  }
+
+  return -1;
 }
 
 void searchMenu() {
@@ -231,11 +259,10 @@ void searchMenu() {
   cin >> searchChoice;
   if (searchChoice == 1) {
 
+    cout << "---------------------------------------------------------------" << endl;
     int target;
     cout << "Enter number to search: ";
     cin >> target;
-
-    // Binary Search requires a sorted array.
     quickSort(arr, n);
 
     int operationCount;
@@ -249,17 +276,43 @@ void searchMenu() {
     duration<double, milli> duration = stop - start;
 
     if (index != -1) {
-        cout << "Number found at index " << index << endl;
+    cout << "Binary Searching. Hold on tight :>" << endl;
+      cout << "Number found at index :> " << index << endl;
     } else {
-        cout << "Number not found." << endl;
+
+      cout << "Binary Serching. Hold on tight :>" << endl;
+      cout << "Number not found. Please type a number that exists :<" << endl;
     }
 
     cout << "Operation Count : " << operationCount << endl;
     cout << "Time Taken      : " << duration.count() << " ms" << endl;
 
   } else if (searchChoice == 2) {
-    // interpolation
+    cout << "---------------------------------------------------------------" << endl;
+    int target;
+    cout << "Enter number to search: ";
+    cin >> target;
 
+    quickSort(arr, n);
+
+    int operationCount;
+    auto start = high_resolution_clock::now();
+
+    int index = interpolationSearch(arr, n, target, operationCount);
+
+    auto stop = high_resolution_clock::now();
+    duration<double, milli> duration = stop - start;
+
+    if (index != -1) {
+    cout << "Interpolation Searching. Hold on tight :>" << endl;
+      cout << "Number found at index :> " << index << endl;
+    } else {
+    cout << "Interpolation Searching. Hold on tight :>" << endl;
+      cout << "Number not found. Please type a number that exists :<" << endl;
+    }
+
+    cout << "Operation Count : " << operationCount << endl;
+    cout << "Time Taken      : " << duration.count() << " ms" << endl;
   } else {
     cout << "Enter Valid choice :( " << endl;
   }
@@ -297,6 +350,7 @@ void mainMenu() {
     }
   }
 }
+
 int main() {
   srand(time(0));
   randomArrays(100);
